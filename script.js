@@ -278,6 +278,18 @@ function setNodes() {
 
 function lineNode(a, b, color = 255) {
   stroke(color);
+  strokeWeight(1.5);
+  line(
+    Math.round(a.x / 2),
+    Math.round(a.y / 2),
+    Math.round(b.x / 2),
+    Math.round(b.y / 2)
+  );
+}
+
+function lineBlackboneNode(a, b, color = 255) {
+  stroke(color);
+  strokeWeight(2);
   line(
     Math.round(a.x / 2),
     Math.round(a.y / 2),
@@ -295,7 +307,13 @@ function drawBackboneCircle(e, R_backbone, color=255) {
 function drawBackboneNode(e, color = 255) {
   fill(color);
   stroke(color);
-  rect(Math.round(e.x / 2) - 3.5, Math.round(e.y / 2) - 3.5, 7, 7);
+  rect(Math.round(e.x / 2) - 3.5, Math.round(e.y / 2) - 3.5, 8, 8);
+}
+
+function drawCenterNode(e, color = 255) {
+  fill(color);
+  stroke(color);
+  rect(Math.round(e.x / 2) - 3.5, Math.round(e.y / 2) - 3.5, 11, 11);
 }
 
 // Kiểm tra a->b->c có phải theo chiều kim đồng hồ không bằng cách kiểm tra xem
@@ -329,20 +347,19 @@ function calcDistance(node1, node2) {
 
 function setup() {
   $("#loading").hide();
-  let width = x_matrix - 1;
-  let height = y_matrix - 1;
+  let width = x_matrix + 5;
+  let height = y_matrix + 5;
 
   let myCanvas = createCanvas(Math.round(width / 2), Math.round(height / 2));
   myCanvas.parent("topology");
   background(0);
-  noSmooth();
 
   // Vẽ nodes
   let points = JSON.parse(JSON.stringify(nodes));
   console.log(points);
   points.forEach((point) => {
     //point(Math.round(point.x/2), Math.round(point.y/2));
-    circle(Math.round(point.x / 2), Math.round(point.y / 2), 3);
+    circle(Math.round(point.x / 2), Math.round(point.y / 2), 4);
   });
 
   // Thêm trọng số vào mỗi nút
@@ -602,7 +619,7 @@ function setup() {
       sourceBackboneIndex = i1;
     }
   });
-  drawBackboneNode(points[min_moment_index], color(255, 204, 0));
+  // drawCenterNode(points[min_moment_index], color(0,100,0));
 
   // In danh sách nút backbones
   let htmlBackbonesTable =
@@ -764,11 +781,14 @@ function setup() {
           trafic: trafic,
         };
         if (!HIDE_NO_TRAFFIC || T_b[e][i] > 0) {
-          lineNode(backbones[e], backbones[i], color(255, 204, 0));
+          lineBlackboneNode(backbones[e], backbones[i], color(255, 204, 0));
         }
       }
     });
   }
+
+  drawCenterNode(points[min_moment_index], color(255,69,0));
+
 
   // 3.3. Mentor 1: Chuyển lưu lượng
   if (MENTOR_1) {
@@ -1061,7 +1081,7 @@ function setup() {
   points.forEach((e, i) => {
     if (e.is_access) {
       fill(color(206, 132, 98));
-      textSize(11);
+      textSize(13);
       let x = Math.round(e.x / 2) - 10;
       let y = Math.round(e.y / 2) - 5;
       x = x < 10 ? 5 : x > x_matrix / 2 - 20 ? x_matrix / 2 - 20 : x;
@@ -1078,7 +1098,7 @@ function setup() {
     x = x < 10 ? 5 : x > x_matrix / 2 - 40 ? x_matrix / 2 - 40 : x;
     y = y < 30 ? y + 45 : y;
     stroke(0);
-    text(i + 1 + " (" + (e.index + 1) + ")", x, y);
+    text(i + 1 + "(" + (e.index + 1) + ")", x, y);
   });
 
   $(".ui.sticky").sticky({

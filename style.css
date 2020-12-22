@@ -61,6 +61,7 @@ table.matrix tbody tr td:nth-child(1) {
 canvas {
   max-width: 100%;
   height: auto !important;
+  width: auto !important;
   border-radius: .28571429rem;
 }
 .custom-slider {
