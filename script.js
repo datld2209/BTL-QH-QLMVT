@@ -433,7 +433,7 @@ function setup() {
       e.is_backbone = true;
       e.is_access = false;
       e.classified = true;
-      drawBackboneNode(e);
+      // drawBackboneNode(e);
       if (DRAW_BACKBONE_CIRCE) {
         drawBackboneCircle(e, R_backbone, 100);
       }
@@ -520,7 +520,7 @@ function setup() {
     points[index_at_merit_max].is_access = false;
     points[index_at_merit_max].is_backbone = true;
     points[index_at_merit_max].classified = true;
-    drawBackboneNode(points[index_at_merit_max]);
+    // drawBackboneNode(points[index_at_merit_max]);
     if (DRAW_BACKBONE_CIRCE)
       drawBackboneCircle(points[index_at_merit_max], R_backbone, 100);
   }
@@ -787,8 +787,11 @@ function setup() {
     });
   }
 
+  //ve node
   drawCenterNode(points[min_moment_index], color(255,69,0));
-
+  points.forEach((p, i) => {
+    if (p.is_backbone && i!=min_moment_index) drawBackboneNode(p);
+  })
 
   // 3.3. Mentor 1: Chuyển lưu lượng
   if (MENTOR_1) {
