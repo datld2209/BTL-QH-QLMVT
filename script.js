@@ -115,6 +115,8 @@ window.onload = function () {
     $("#problem-modal").modal("hide");
   });
   $("#reload").click(async function () {
+    $("#loading").show();
+    $("#topology").empty();
     $("#reload").addClass("loading");
     await reload(false);
     $("#reload").removeClass("loading");
