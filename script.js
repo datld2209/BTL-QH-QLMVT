@@ -114,53 +114,10 @@ window.onload = function () {
   $("#close-problem-modal").click(function () {
     $("#problem-modal").modal("hide");
   });
-  $("#reload").click(function () {
-    w = new Array(nodeNumber);
-    for (let i = 0; i < nodeNumber; i++) {
-      w[i] = getRandomInt(1, 20);
-    }
-
-    console.log(w);
-
-    // Gán lưu lượng giữa các nút
-    T = new Array(nodeNumber);
-    for (let i = 0; i < T.length; i++) {
-      T[i] = new Array(nodeNumber).fill(0);
-    }
-
-    // T(i,i+3) = 1 // T(i,i+4) = 2 // T(i,i+8) = 3 // T(7,28) = 5 // T(12,46) = 6 // T(60,68) = 4
-    // T[6][27] = 5; T[27][6] = 5;
-    // T[11][45] = 6; T[45][11] = 6;
-    // T[59][67] = 4; T[67][59] = 4;
-    for (let i = 0; i < nodeNumber; i++) {
-      for (let j = 0; j < nodeNumber; j++) {
-        if (T[i][j] == 0) {
-          if (j === i + 3) {
-            T[i][j] += 1;
-            T[j][i] += 1;
-          }
-          if (j === i + 4) {
-            T[i][j] += 2;
-            T[j][i] += 2;
-          }
-          if (j === i + 8) {
-            T[i][j] += 3;
-            T[j][i] += 3;
-          }
-        }
-      }
-    }
-
-    var mathDiv = document.getElementById("math");
-    var displayDiv = document.getElementById("display");
-    $("#flow").printMatrix({
-      title: "T",
-      matrix: T,
-      height: "300px",
-    });
-
-    setNodes();
-    setup();
+  $("#reload").click(async function () {
+    $("#reload").addClass("loading");
+    await reload(false);
+    $("#reload").removeClass("loading");
   });
   $(":checkbox").change(function () {
     DRAW_CONVEX_HULL = $("#ck1").prop("checked");
@@ -174,6 +131,65 @@ window.onload = function () {
     setup();
   });
 };
+
+function reload(init) {
+  if (init) {
+    let w,T;
+    var mathDiv = document.getElementById("math");
+    var displayDiv = document.getElementById("display");
+  }
+
+  w = new Array(nodeNumber);
+  for (let i = 0; i < nodeNumber; i++) {
+    w[i] = getRandomInt(1, 20);
+  }
+
+  console.log(w);
+
+  // Gán lưu lượng giữa các nút
+  T = new Array(nodeNumber);
+  for (let i = 0; i < T.length; i++) {
+    T[i] = new Array(nodeNumber).fill(0);
+  }
+
+  // T(i,i+3) = 1 // T(i,i+4) = 2 // T(i,i+8) = 3 // T(7,28) = 5 // T(12,46) = 6 // T(60,68) = 4
+  // T[6][27] = 5; T[27][6] = 5;
+  // T[11][45] = 6; T[45][11] = 6;
+  // T[59][67] = 4; T[67][59] = 4;
+  for (let i = 0; i < nodeNumber; i++) {
+    for (let j = 0; j < nodeNumber; j++) {
+      if (T[i][j] == 0) {
+        if (j === i + 3) {
+          T[i][j] += 1;
+          T[j][i] += 1;
+        }
+        if (j === i + 4) {
+          T[i][j] += 2;
+          T[j][i] += 2;
+        }
+        if (j === i + 8) {
+          T[i][j] += 3;
+          T[j][i] += 3;
+        }
+      }
+    }
+  }
+
+  $("#flow").printMatrix({
+    title: "T",
+    matrix: T,
+    height: "300px",
+  });
+
+  setNodes();
+
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      if(!init) setup();
+      resolve();
+    }, 1000)
+  );
+}
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -211,57 +227,13 @@ nodeNumberElement.addEventListener("change", (e) => {
   nodeNumber = parseInt(nodeNumberElement.value);
 });
 
-nodeNumberElement.addEventListener("keyup", function(event) {
-    if (event.key === 'Enter') {
-      document.getElementById("reload").click();
-    }
-  });
-
-let w = new Array(nodeNumber);
-for (let i = 0; i < nodeNumber; i++) {
-  w[i] = getRandomInt(1, 20);
-}
-
-
-//console.log(w);
-
-// Gán lưu lượng giữa các nút
-let T = new Array(nodeNumber);
-for (let i = 0; i < T.length; i++) {
-  T[i] = new Array(nodeNumber).fill(0);
-}
-
-// T(i,i+3) = 1 // T(i,i+4) = 2 // T(i,i+8) = 3 // T(7,28) = 5 // T(12,46) = 6 // T(60,68) = 4
-// T[6][27] = 5; T[27][6] = 5;
-// T[11][45] = 6; T[45][11] = 6;
-// T[59][67] = 4; T[67][59] = 4;
-for (let i = 0; i < nodeNumber; i++) {
-  for (let j = 0; j < nodeNumber; j++) {
-    if (T[i][j] == 0) {
-      if (j === i + 3) {
-        T[i][j] += 1;
-        T[j][i] += 1;
-      }
-      if (j === i + 4) {
-        T[i][j] += 2;
-        T[j][i] += 2;
-      }
-      if (j === i + 8) {
-        T[i][j] += 3;
-        T[j][i] += 3;
-      }
-    }
+nodeNumberElement.addEventListener("keyup", function (event) {
+  if (event.key === "Enter") {
+    document.getElementById("reload").click();
   }
-}
-
-var mathDiv = document.getElementById("math");
-var displayDiv = document.getElementById("display");
-$("#flow").printMatrix({
-  title: "T",
-  matrix: T,
-  height: "300px",
 });
-setNodes();
+
+reload(true);
 
 function setNodes() {
   nodes = [];
@@ -298,7 +270,7 @@ function lineBlackboneNode(a, b, color = 255) {
   );
 }
 
-function drawBackboneCircle(e, R_backbone, color=255) {
+function drawBackboneCircle(e, R_backbone, color = 255) {
   noFill();
   stroke(color);
   circle(Math.round(e.x / 2), Math.round(e.y / 2), R_backbone);
@@ -422,7 +394,7 @@ function setup() {
   }
   let R_backbone = R * max_distance.distance;
   if (DRAW_MAX_DISTANCE) {
-    lineNode(max_distance.node1, max_distance.node2, color(255,0,0));
+    lineNode(max_distance.node1, max_distance.node2, color(255, 0, 0));
   }
 
   // Phân loại nút
@@ -630,7 +602,8 @@ function setup() {
       "<tr" +
       (index == sourceBackboneIndex ? ' class="warning"' : "") +
       "><td>" +
-      (index + 1) + (index == sourceBackboneIndex ? ' (nút trung tâm)' : "") +
+      (index + 1) +
+      (index == sourceBackboneIndex ? " (nút trung tâm)" : "") +
       "</td>";
     htmlBackbonesTable += "<td>" + (element.index + 1) + "</td></tr>";
   });
@@ -734,7 +707,7 @@ function setup() {
       hop[i][j] = Pi.length + Pj.length;
     }
   }
-  
+
   //console.log(path);
   if (!MENTOR_1) {
     /* // Sử dụng lưu lượng gốc giữa các nút backbone
@@ -788,10 +761,10 @@ function setup() {
   }
 
   //ve node
-  drawCenterNode(points[min_moment_index], color(255,69,0));
+  drawCenterNode(points[min_moment_index], color(255, 69, 0));
   points.forEach((p, i) => {
-    if (p.is_backbone && i!=min_moment_index) drawBackboneNode(p);
-  })
+    if (p.is_backbone && i != min_moment_index) drawBackboneNode(p);
+  });
 
   // 3.3. Mentor 1: Chuyển lưu lượng
   if (MENTOR_1) {
