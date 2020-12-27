@@ -146,7 +146,7 @@ function reload(init) {
     w[i] = getRandomInt(1, 20);
   }
 
-  console.log(w);
+  // console.log(w);
 
   // Gán lưu lượng giữa các nút
   T = new Array(nodeNumber);
@@ -538,7 +538,7 @@ function setup() {
     return a.index - b.index;
   });
 
-  console.log(backbones);
+  // console.log(backbones);
 
   let T_b = [];
   backbones.forEach((b1, i1) => {
@@ -994,6 +994,7 @@ function setup() {
     }
   }
   $("#price").html(Price.toFixed(2));
+  console.log("links", links)
 
   // In danh sách liên kết
   let htmlLinkTable =
@@ -1055,6 +1056,19 @@ function setup() {
     matrix: usage,
     height: "300px",
   });
+
+  let htmlWeightsTable =
+    '<table class="ui celled table center aligned unstackable selectable"><thead><tr><th>Nút</th><th>Trọng số w</th>';
+  htmlWeightsTable += "</tr></thead><tbody>";
+  points.forEach((element, index) => {
+    htmlWeightsTable += "<tr><td>" + (index + 1) + "</td>";
+    htmlWeightsTable +=
+      "<td>" +
+      element.w +
+      "</td></tr>";
+  });
+  htmlWeightsTable += "</tbody></table>";
+  $("#weight").html(htmlWeightsTable);
 
   points.forEach((e, i) => {
     if (e.is_access) {

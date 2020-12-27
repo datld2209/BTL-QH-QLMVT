@@ -66,13 +66,13 @@
 
           <div class="ui vertical segment">
             <div class="ui grid">
-              <div class="three wide column">
+              <div class="four wide column">
                 <p style="padding: 10px 0">N =</p>
               </div>
               <div class="ui input six wide column">
                   <input type="number" value="90" id="number-nodes" />
               </div>
-              <div class="seven wide column">
+              <div class="six wide column">
                 <button id="reload" class="ui fluid labeled icon primary button">
                   <i class="icon redo alternate"></i>
                   Tạo mới
@@ -81,7 +81,7 @@
             </div>
 
             <div class="ui grid">
-                <div class="three wide column">
+                <div class="four wide column">
                   <p style="padding: 10px 0">W =</p>
                 </div>
                 <div class="six wide column">
@@ -92,43 +92,32 @@
               </div>
 
             <div class="ui grid">
-              <div class="three wide column">
+              <div class="four wide column">
                 <p>R = <span id="r-value">0.3</span></p>
               </div>
-              <div class="thirteen wide column">
+              <div class="twelve wide column">
                 <div class="ui slider custom-slider" id="r-slider"></div>
               </div>
             </div>
             <div class="ui grid">
-              <div class="three wide column">
+              <div class="four wide column">
                 <p>α = <span id="alpha-value">0.4</span></p>
               </div>
-              <div class="thirteen wide column">
+              <div class="twelve wide column">
                 <div class="ui slider custom-slider" id="alpha-slider"></div>
               </div>
             </div>
-            <!-- <div class="ui grid">
-              <div class="five wide column">
+            <div class="ui grid">
+              <div class="four wide column">
                 <p>U<sub>min</sub> = <span id="umin-value">0.7</span></p>
               </div>
-              <div class="eleven wide column">
+              <div class="twelve wide column">
                 <div class="ui slider custom-slider" id="umin-slider"></div>
-              </div>
-            </div> -->
-          </div>
-
-          <!-- <div class="ui vertical segment">
-            <div class="ui two column grid">
-              <div class="column">
-                <div class="ui toggle checkbox">
-                  <input id="ck5" type="checkbox" />
-                  <label>Mentor 1</label>
-                </div>
               </div>
             </div>
           </div>
 
-          <div class="ui vertical segment">
+          <!-- <div class="ui vertical segment">
             <div class="ui two column grid">
               <div class="column">
                 <div class="ui toggle checkbox">
@@ -165,6 +154,15 @@
                   <label>Đường B-A</label>
                 </div>
                 <br /><br />
+
+                <!-- <div class="ui two column grid"> -->
+                  <div class="column">
+                    <div class="ui toggle checkbox">
+                      <input id="ck5" type="checkbox" />
+                      <label>Liên kết trực tiếp</label>
+                    </div>
+                  </div>
+                <!-- </div> -->
                 <!-- <div class="column">
                   <div class="ui toggle checkbox">
                     <input id="ck6" type="checkbox" />
@@ -178,8 +176,11 @@
           <div id="detail" class="ui vertical segment">
             <h4 class="ui horizontal divider header">Chi tiết</h4>
             
+            <p class="ui">Lưu lượng</p>
+            <div id="flow"></div>
             
-           
+            <p class="ui">Trọng số</p>
+            <div id="weight" class="fixed-top"></div>
 
             <div id="math" class="temp">$$$$</div>
             <div id="display"></div>
@@ -188,7 +189,7 @@
             <div id="nodes" class="fixed-top"></div>
             <p class="ui">Danh sách nút backbone</p>
             <div id="backbones" class="fixed-top"></div>
-            <!-- <p class="ui">Lưu lượng giữa các nút backbone</p>
+            <p class="ui">Lưu lượng giữa các nút backbone</p>
             <div id="backbone-flow"></div>
             <p class="ui">Số đường trên liên kết</p>
             <div id="number-line"></div>
@@ -196,17 +197,16 @@
             <div id="usage"></div>
             <p class="ui">Danh sách liên kết</p>
             <div id="links"></div>
-            <div id="mentor2">
+            <!-- <div id="mentor2">
               <p class="ui">Liên kết trực tiếp được thêm</p>
               <div id="direct-link"></div>
             </div>
           </div> -->
-          <p class="ui">
+          <!-- <p class="ui">
             Tổng giá: <strong><span id="price"></span></strong>
-          </p>
+          </p> -->
 
-          <p class="ui">Lưu lượng</p>
-          <div id="flow"></div>
+          
         </div>
       </div>
     </div>
