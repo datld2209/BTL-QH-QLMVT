@@ -79,7 +79,7 @@ window.onload = function () {
   $("#alpha-slider").slider({
     min: 0,
     max: 1,
-    start: 0.4,
+    start: 0.3,
     step: 0.01,
     onMove: function (val) {
       $("#alpha-value").html(val);
@@ -91,7 +91,7 @@ window.onload = function () {
   $("#umin-slider").slider({
     min: 0,
     max: 1,
-    start: 0.7,
+    start: 0.85,
     step: 0.01,
     onMove: function (val) {
       $("#umin-value").html(val);
@@ -143,10 +143,33 @@ function reload(init) {
 
   w = new Array(nodeNumber);
   for (let i = 0; i < nodeNumber; i++) {
-    w[i] = getRandomInt(1, 20);
-  }
+    // w[i] = getRandomInt(1, 20);
+    let result = 0;
+    if (i < 47 || i >= 53) {
+      result += 1;
+    }
+    if (i < 17 || i >= 83) {
+      result += 2;
+    }
+    if (i < 7 || i >= 93) {
+      result += 4;
+    }
+    if (i == 12 || i == 3) {
+      result += 18;
+    }
+    if (i == 23 || i == 68) {
+      result += 6;
+    }
+    if (i == 19|| i == 47) {
+      result += 26;
+    }
+    if (i == 58|| i == 14) {
+      result += 17;
+    }
+    w[i] = result;
+  };
 
-  // console.log(w);
+
 
   // Gán lưu lượng giữa các nút
   T = new Array(nodeNumber);
@@ -154,28 +177,38 @@ function reload(init) {
     T[i] = new Array(nodeNumber).fill(0);
   }
 
-  // T(i,i+3) = 1 // T(i,i+4) = 2 // T(i,i+8) = 3 // T(7,28) = 5 // T(12,46) = 6 // T(60,68) = 4
-  // T[6][27] = 5; T[27][6] = 5;
-  // T[11][45] = 6; T[45][11] = 6;
-  // T[59][67] = 4; T[67][59] = 4;
+  // T(i,i+53) = 1 // T(i,i+83) = 2 // T(i,i+93) = 4 
+  // T[3][12] = 18; T[12][3] = 18;
+  // T[23][68] = 6; T[68][23] = 6;
+  // T[19][47] = 26; T[47][19] = 26;
+  // T[58][14] = 17; T[14][19] = 26;
   for (let i = 0; i < nodeNumber; i++) {
     for (let j = 0; j < nodeNumber; j++) {
       if (T[i][j] == 0) {
-        if (j === i + 3) {
+        if (j === i + 53) {
           T[i][j] += 1;
           T[j][i] += 1;
         }
-        if (j === i + 4) {
+        if (j === i + 83) {
           T[i][j] += 2;
           T[j][i] += 2;
         }
-        if (j === i + 8) {
-          T[i][j] += 3;
-          T[j][i] += 3;
+        if (j === i + 93) {
+          T[i][j] += 4;
+          T[j][i] += 4;
         }
       }
     }
-  }
+  };
+
+  T[12][3] = 18; 
+  T[3][12] = 18;
+  T[23][68] = 6;
+  T[68][23] = 6;
+  T[19][47] = 26;
+  T[47][19] = 26;
+  T[58][14] = 17;
+  T[14][58] = 17;
 
   $("#flow").printMatrix({
     title: "T",
@@ -209,14 +242,14 @@ let DIJSKTRA_TRAFFIC_ONLY = $("#dijsktra-traffic-only").prop("checked");
 let HIDE_NO_TRAFFIC = $("#hide-no-traffic").prop("checked");
 let x_matrix = 1200;
 let y_matrix = 1200;
-let nodeNumber = 90;
+let nodeNumber = 100;
 //console.log(nodeNumber);
 let nodes = [];
 let W = 2;
 let R = 0.3;
-let C = 9;
-let alpha = 0.4;
-let u_min = 0.7;
+let C = 10;
+let alpha = 0.3;
+let u_min = 0.85;
 
 const wNumberElement = document.getElementById("number-w");
 wNumberElement.addEventListener("change", (e) => {
@@ -395,6 +428,7 @@ function setup() {
     }
   }
   let R_backbone = R * max_distance.distance;
+  console.log(R_backbone);
   if (DRAW_MAX_DISTANCE) {
     lineNode(max_distance.node1, max_distance.node2, color(255, 0, 0));
   }
@@ -407,6 +441,7 @@ function setup() {
       e.is_backbone = true;
       e.is_access = false;
       e.classified = true;
+      console.log(e);
       // drawBackboneNode(e);
       if (DRAW_BACKBONE_CIRCE) {
         drawBackboneCircle(e, R_backbone, 100);
@@ -445,10 +480,7 @@ function setup() {
         if (e.access === undefined) e.access = [];
       }
     });
-    let centerNode = {
-      x: x_numerator / denominator,
-      y: y_numerator / denominator,
-    };
+    
     let dc = [];
     let dcmax = 0,
       w_at_dcmax = 0,
@@ -461,11 +493,17 @@ function setup() {
         denominator += e.w;
       }
     });
+    let centerNode = {
+      x: x_numerator / denominator,
+      y: y_numerator / denominator,
+    };
+    
     if (untype == 0) {
       break;
     }
     points.forEach((e, i) => {
       if (!e.classified) {
+        console.log(centerNode);
         dc[i] = calcDistance(e, centerNode);
         if (dc[i] >= dcmax) {
           dcmax = calcDistance(e, centerNode);
@@ -475,7 +513,7 @@ function setup() {
     });
     //console.log(untype);
     let merit_max = 0;
-    index_at_merit_max = 0;
+    let index_at_merit_max = 0;
     points.forEach(function (e, i) {
       if (!e.classified) {
         let merit;
@@ -786,6 +824,7 @@ function setup() {
     //console.log(pair);
     pair.forEach((e) => {
       let n = Math.ceil(T_b[e.s][e.d] / C);
+      console.log(T_b[e.s][e.d]);
       let u = T_b[e.s][e.d] / (n * C);
       if (e.hop >= 2 && T_b[e.s][e.d] > 0) {
         if (u >= u_min) {
@@ -931,6 +970,7 @@ function setup() {
           color(255, 0, 111)
         );
         let n = Math.ceil(T_b[pair.start][pair.stop] / C);
+        console.log(n);
         let u = T_b[pair.start][pair.stop] / (C * n);
         links[pair.start][pair.stop] = links[pair.stop][pair.start] = {
           n: n,
@@ -940,6 +980,8 @@ function setup() {
         };
       }
     });
+    console.log(T_b);
+
 
     // In bảng liên kết trực tiếp
     let htmlDirectLinkTable =
